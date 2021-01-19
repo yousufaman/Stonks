@@ -1,5 +1,6 @@
 // Header files
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -8,7 +9,10 @@
 #include <random>
 #include "Array.cpp"
 
+
 using namespace std;
+
+
 
 // Helper Functions for Simulating Black Scholes Model
 void welcomeMessage();
@@ -24,7 +28,7 @@ int main()
     clock_t t = clock();
 
     // Variables Required
-    int no_of_bsmodel_simulation = 10;     // Inner loop iterations
+    int no_of_bsmodel_simulation = 100;     // Inner loop iterations
     int no_of_averages = 1000;  // Outer loop iterations
     int time_interval = 180; //in minutes
     float risk_rate = 0.001f;   // Risk free interest rate (%)
@@ -50,6 +54,7 @@ int main()
     float volatility = calculateStandardVolatility(spot_price, time_interval);
     float* opt_stock = new float[time_interval];
 
+    cout << std::setprecision(2) << std::fixed;
     for (int i = 0; i < no_of_averages; i++)
     {
         //nested lopp for averaging simulations
@@ -57,6 +62,8 @@ int main()
             stock[j] = simulateBlackScholesModel(spot_price, time_interval, risk_rate, volatility); 
 
         avg_stock[i] = calculateAverage(stock, no_of_bsmodel_simulation, time_interval);
+        cout << "End of Simulation : " << i << endl;
+        cout << " estimated Call Back : " <<avg_stock[i][179] << endl;
     }
 
     //get optimal prices from the average of all simulations
@@ -72,7 +79,6 @@ int main()
 
     for (int i = 0; i < time_interval; i++){
         file_ptr << opt_stock[i] << ",";
-        cout << opt_stock[i] << endl;
     }
     file_ptr.close();
 
@@ -90,7 +96,7 @@ int main()
     t = clock() - t;
     cout << " \n\nTime Taken for execution:  " << (t / CLOCKS_PER_SEC) << "s";
 
-    cout << "\nDone!\nEstimated Black Scholes!\nCheck OPT.CSV!";
+    cout << "\nDone!\nEstimated Black Scholes!\nCheck OPT.CSV!\nPress Enter to End";
 
     getchar();
     return 0;
@@ -104,7 +110,7 @@ void welcomeMessage()
     cout << "*****************************************\n";
 
     cout << "\nProject Made By:\nM. Yousuf Aman";
-    cout << "\nFizza Zakir\n\n";
+    cout << "\nFizza Zakir\n\nPress Enter to Start Simulation\n\n";
     getchar();
 }
 
